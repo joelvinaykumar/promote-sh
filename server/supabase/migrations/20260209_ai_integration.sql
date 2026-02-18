@@ -17,11 +17,11 @@ create index if not exists chat_messages_session_id_idx on chat_messages (sessio
 -- Add embedding column to work_log_entry table
 -- Note: work_log_entry table name from src/utils/constants.tsx
 alter table work_log_entry 
-add column if not exists embedding vector(1536); -- 1536 is the dimension for Gemini Text Embedding 004 or OpenAI text-embedding-3-small
+add column if not exists embedding vector(768); -- 768 is the dimension for Gemini Text Embedding 004
 
 -- Function to search entries by vector similarity
 create or replace function match_entries (
-  query_embedding vector(1536),
+  query_embedding vector(768),
   match_threshold float,
   match_count int,
   user_id_param uuid

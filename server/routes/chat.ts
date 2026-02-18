@@ -24,6 +24,9 @@ const openrouter = createOpenAI({
   }
 })
 
+import { embed } from 'ai'
+import { google as googleProvider } from '@ai-sdk/google'
+
 // AI Streaming Chat
 chat.post('/', async (c) => {
   const user = await getAuthUser(c)
@@ -37,29 +40,21 @@ chat.post('/', async (c) => {
       return c.json({ error: 'Invalid or empty messages array' }, 400)
     }
 
-    // Convert UI messages to Model messages
-    console.log('Raw messages from client:', JSON.stringify(messages, null, 2))
     const modelMessages = await convertToModelMessages(messages)
-    console.log('Converted model messages:', JSON.stringify(modelMessages, null, 2))
     
     // Save user message to Supabase
     const lastMessage = messages[messages.length - 1]
     if (lastMessage && sessionId && lastMessage.role === 'user') {
-      // Extract content from parts (latest AI SDK format)
       const textContent = lastMessage.content || 
         (lastMessage.parts?.find((p: any) => p.type === 'text')?.text) || 
         '';
 
-      const { error: insertError } = await supabase.from('chat_messages').insert({
+      await supabase.from('chat_messages').insert({
         user_id: user.id,
         session_id: sessionId,
         role: 'user',
         content: textContent,
       })
-      
-      if (insertError) {
-        console.error('Failed to save user message:', insertError)
-      }
     }
     
     try {
@@ -67,16 +62,15 @@ chat.post('/', async (c) => {
         model: openrouter.chat('openrouter/auto:free'), 
         stopWhen: stepCountIs(5),
         temperature: 0.7,
-        system: `${GOD_PROMPT}\n\nTOOL USE POLICY: Most tool parameters are optional. If a user asks a general question, do NOT ask for a project ID or category; just call the tool with defaults. Be decisive.`,
+        system: `${GOD_PROMPT}\n\nTOOL USE POLICY: Use semantic search for specific questions. Use summaries for high-level overviews. Minimize data transfer.`,
         messages: modelMessages,
         tools: {
           get_work_logs: tool({
-            description: 'Fetch work log entries. Use this for general summaries or filtering by category/project.',
-            strict: false,
+            description: 'Fetch detailed work log entries. Use for deep dives into specific items.',
             inputSchema: z.object({
               limit: z.number().optional().default(10).describe('Number of logs to fetch.'),
-              category: z.string().optional().describe('Filter by category (e.g., bug, feature).'),
-              projectId: z.string().optional().describe('Optional: Database ID of a specific project. If not provided or user asks generally, do NOT ask the user for this ID; just omit it.'),
+              category: z.string().optional().describe('Filter by category.'),
+              projectId: z.string().optional().describe('Filter by project ID.'),
             }),
             execute: async ({ limit, category, projectId }) => {
               let query = supabase
@@ -94,21 +88,57 @@ chat.post('/', async (c) => {
               return data
             },
           }),
-          search_work_logs: tool({
-            description: 'Search for specific work logs using semantic search',
+          get_work_log_summary: tool({
+            description: 'Fetch a high-level summary of work logs (titles and impact only). Use this for broad questions about many logs.',
             inputSchema: z.object({
-              query: z.string(),
+              limit: z.number().optional().default(30).describe('Number of logs to summarize.'),
             }),
-            execute: async ({ query }) => {
+            execute: async ({ limit }) => {
               const { data, error } = await supabase
                 .from(SupabaseTableName.ENTRIES)
-                .select('*')
+                .select('id, title, category, created_at, project_id, time_spent')
                 .eq('user_id', user.id)
-                .ilike('title', `%${query}%`)
-                .limit(5)
+                .order('created_at', { ascending: false })
+                .limit(limit)
 
               if (error) throw new Error(error.message)
               return data
+            },
+          }),
+          search_work_logs: tool({
+            description: 'Search for work logs using semantic similarity. Best for "Have I ever done X?" or finding related past tasks.',
+            inputSchema: z.object({
+              query: z.string().describe('The search query string.'),
+            }),
+            execute: async ({ query }) => {
+              try {
+                // Generate embedding for query
+                const { embedding } = await embed({
+                  model: googleProvider.textEmbedding('text-embedding-004'),
+                  value: query,
+                })
+
+                // Use the match_entries RPC for vector search
+                const { data, error } = await supabase.rpc('match_entries', {
+                  query_embedding: embedding,
+                  match_threshold: 0.3,
+                  match_count: 10,
+                  user_id_param: user.id,
+                })
+
+                if (error) throw new Error(error.message)
+                return data
+              } catch (err) {
+                console.error('Semantic search failed, falling back to keyword:', err)
+                const { data, error: fbError } = await supabase
+                  .from(SupabaseTableName.ENTRIES)
+                  .select('*')
+                  .eq('user_id', user.id)
+                  .ilike('title', `%${query}%`)
+                  .limit(10)
+                if (fbError) throw new Error(fbError.message, { cause: err })
+                return data
+              }
             },
           }),
         },
