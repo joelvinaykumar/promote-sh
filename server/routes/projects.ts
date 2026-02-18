@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { supabase } from '../lib/supabase'
 import { getAuthUser } from '../lib/auth'
-import { SupabaseTableName } from '@/utils/constants'
+import { SupabaseTableName } from '../../src/utils/constants'
 
 const projects = new Hono()
 

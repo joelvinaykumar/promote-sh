@@ -6,18 +6,18 @@ import { createOpenAI } from '@ai-sdk/openai'
 import { z } from 'zod'
 import { supabase } from '../lib/supabase'
 import { getAuthUser } from '../lib/auth'
-import { GOD_PROMPT, SupabaseTableName } from '@/utils/constants'
+import { GOD_PROMPT, SupabaseTableName } from '../../src/utils/constants'
 
 const chat = new Hono()
 
 const google = createGoogleGenerativeAI({
-  apiKey: import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY,
+  apiKey: process.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY || import.meta.env?.VITE_GOOGLE_GENERATIVE_AI_API_KEY,
 })
 
 // Initialize OpenRouter client
 const openrouter = createOpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: import.meta.env.VITE_OPENROUTER_KEY || process.env.VITE_OPENROUTER_KEY,
+  apiKey: process.env.VITE_OPENROUTER_KEY || import.meta.env?.VITE_OPENROUTER_KEY,
   headers: {
     'HTTP-Referer': 'http://localhost:3000', 
     'X-Title': 'Work Log App',
@@ -62,7 +62,7 @@ chat.post('/', async (c) => {
         model: openrouter.chat('openrouter/auto:free'), 
         stopWhen: stepCountIs(5),
         temperature: 0.7,
-        system: `${GOD_PROMPT}\n\nTOOL USE POLICY: Use semantic search for specific questions. Use summaries for high-level overviews. Minimize data transfer.`,
+        system: `${GOD_PROMPT}\n\nCURRENT_DATE: ${new Date().toISOString().split('T')[0]}\n\nTOOL USE POLICY: Use semantic search for specific questions. Use summaries for high-level overviews. Minimize data transfer.`,
         messages: modelMessages,
         tools: {
           get_work_logs: tool({
@@ -71,8 +71,10 @@ chat.post('/', async (c) => {
               limit: z.number().optional().default(10).describe('Number of logs to fetch.'),
               category: z.string().optional().describe('Filter by category.'),
               projectId: z.string().optional().describe('Filter by project ID.'),
+              startDate: z.string().optional().describe('ISO date string (YYYY-MM-DD or full timestamp). Filter logs created at or after this date.'),
+              endDate: z.string().optional().describe('ISO date string (YYYY-MM-DD or full timestamp). Filter logs created at or before this date.'),
             }),
-            execute: async ({ limit, category, projectId }) => {
+            execute: async ({ limit, category, projectId, startDate, endDate }) => {
               let query = supabase
                 .from(SupabaseTableName.ENTRIES)
                 .select('*')
@@ -82,6 +84,8 @@ chat.post('/', async (c) => {
 
               if (category) query = query.eq('category', category)
               if (projectId) query = query.eq('project_id', projectId)
+              if (startDate) query = query.gte('created_at', startDate)
+              if (endDate) query = query.lte('created_at', endDate)
 
               const { data, error } = await query
               if (error) throw new Error(error.message)
@@ -92,15 +96,21 @@ chat.post('/', async (c) => {
             description: 'Fetch a high-level summary of work logs (titles and impact only). Use this for broad questions about many logs.',
             inputSchema: z.object({
               limit: z.number().optional().default(30).describe('Number of logs to summarize.'),
+              startDate: z.string().optional().describe('ISO date string (YYYY-MM-DD).'),
+              endDate: z.string().optional().describe('ISO date string (YYYY-MM-DD).'),
             }),
-            execute: async ({ limit }) => {
-              const { data, error } = await supabase
+            execute: async ({ limit, startDate, endDate }) => {
+              let query = supabase
                 .from(SupabaseTableName.ENTRIES)
                 .select('id, title, category, created_at, project_id, time_spent')
                 .eq('user_id', user.id)
                 .order('created_at', { ascending: false })
                 .limit(limit)
 
+              if (startDate) query = query.gte('created_at', startDate)
+              if (endDate) query = query.lte('created_at', endDate)
+
+              const { data, error } = await query
               if (error) throw new Error(error.message)
               return data
             },

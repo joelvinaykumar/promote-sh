@@ -1,13 +1,17 @@
 import { Hono } from 'hono'
 import { supabase } from '../lib/supabase'
-import { SupabaseTableName } from '@/utils/constants'
+import { SupabaseTableName } from '../../src/utils/constants'
 import { zValidator } from '@hono/zod-validator'
 import z from 'zod'
 import { getAuthUser } from '../lib/auth'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { embed } from 'ai'
-import { google } from '@ai-sdk/google'
 
 const entries = new Hono()
+
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY || import.meta.env?.VITE_GOOGLE_GENERATIVE_AI_API_KEY,
+})
 
 const filtersSchema = z.object({
   category: z.string().optional(),
