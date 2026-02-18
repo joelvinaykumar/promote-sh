@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { supabase } from '../lib/supabase'
-import { SupabaseTableName } from '../../src/utils/constants'
+import { SupabaseTableName } from '../../src/utils/shared-constants'
 import { zValidator } from '@hono/zod-validator'
 import z from 'zod'
 import { getAuthUser } from '../lib/auth'

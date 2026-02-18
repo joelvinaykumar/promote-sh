@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from './ui/textarea'
 import { Input } from './ui/input'
 import { cn } from './ui/utils'
-import { CATEGORIES, PRIORITIES } from '@/utils/constants'
+import { CATEGORIES, PRIORITIES } from '@/utils/constants-ui'
 
 const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),

@@ -18,7 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { CATEGORIES, PRIORITIES, STATUSES } from '@/utils/constants'
+import { CATEGORIES, PRIORITIES, STATUSES } from '@/utils/constants-ui'
 import { cn } from '@/components/ui/utils'
 import { useProjectStore } from '@/store/useProjectStore'
 

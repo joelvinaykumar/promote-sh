@@ -170,7 +170,7 @@ export function ContributionGrid() {
                   {week.map((day) => (
                     <div
                       key={day.date}
-                      className={`size-3 rounded-[2px] ${getIntensityClass(day.count)} transition-all hover:ring-2 hover:ring-emerald-500 hover:ring-offset-1 cursor-pointer ring-inset`}
+                      className={`size-3.5 rounded-[2px] ${getIntensityClass(day.count)} transition-all hover:ring-2 hover:ring-emerald-500 hover:ring-offset-1 cursor-pointer ring-inset`}
                       title={`${formatDate(day.date)}: ${day.count} ${day.count === 1 ? 'entry' : 'entries'}`}
                     />
                   ))}

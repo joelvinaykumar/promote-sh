@@ -12,7 +12,7 @@ import { Badge } from './ui/badge'
 import { cn } from './ui/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
-import { CATEGORIES } from '@/utils/constants'
+import { CATEGORIES } from '@/utils/constants-ui'
 import { useProjectStore } from '@/store/useProjectStore'
 
 const TIME_PRESETS = [

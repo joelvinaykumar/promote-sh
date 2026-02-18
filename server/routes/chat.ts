@@ -1,12 +1,12 @@
 import { Hono } from 'hono'
-import { appendFileSync } from 'fs'
+
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { streamText, generateText, tool, convertToModelMessages, stepCountIs } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 import { z } from 'zod'
 import { supabase } from '../lib/supabase'
 import { getAuthUser } from '../lib/auth'
-import { GOD_PROMPT, SupabaseTableName } from '../../src/utils/constants'
+import { GOD_PROMPT, SupabaseTableName } from '../../src/utils/shared-constants'
 
 const chat = new Hono()
 
@@ -172,7 +172,6 @@ chat.post('/', async (c) => {
         },
         onError: ({ error }) => {
           console.error('SERVER STREAM ERROR:', error)
-          appendFileSync('chat_stream_errors.log', JSON.stringify({ timestamp: new Date().toISOString(), error }, null, 2) + '\n---\n')
         }
       })
 

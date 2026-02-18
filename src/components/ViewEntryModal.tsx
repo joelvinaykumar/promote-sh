@@ -4,7 +4,7 @@ import { Calendar, Clock, Tag, BottleWine, Thermometer } from 'lucide-react'
 import { WorkEntry } from '../types'
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog'
 import { formatTime, formatTimestamp } from '@/utils/format'
-import { CATEGORIES, PRIORITIES } from '@/utils/constants'
+import { CATEGORIES, PRIORITIES } from '@/utils/constants-ui'
 
 interface ViewEntryModalProps {
   entry: WorkEntry
