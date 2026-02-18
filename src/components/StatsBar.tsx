@@ -69,30 +69,30 @@ export function StatsBar({ entries }: StatsBarProps) {
     colorClass: string;
     trend?: string;
   }) => (
-    <div className='bg-white border border-slate-200 p-4 rounded-2xl shadow-xs hover:shadow-sm transition-all group'>
-      <div className='flex items-start justify-between mb-3'>
-        <div className={cn('p-2 rounded-xl bg-slate-50 group-hover:scale-110 transition-transform', colorClass)}>
-          <Icon className='size-4' />
+    <div className='bg-white border border-slate-200 p-3 sm:p-4 rounded-2xl shadow-xs hover:shadow-sm transition-all group'>
+      <div className='flex items-start justify-between mb-2 sm:mb-3'>
+        <div className={cn('p-1.5 sm:p-2 rounded-xl bg-slate-50 group-hover:scale-110 transition-transform', colorClass)}>
+          <Icon className='size-3.5 sm:size-4' />
         </div>
         {trend && (
-          <div className='flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tight'>
-            <TrendingUp className='size-3' />
+          <div className='flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full uppercase tracking-tight'>
+            <TrendingUp className='size-2.5 sm:size-3' />
             {trend}
           </div>
         )}
       </div>
-      <div className='space-y-1'>
-        <p className='text-xs font-semibold text-slate-400 uppercase tracking-wider'>{label}</p>
+      <div className='space-y-0.5 sm:space-y-1'>
+        <p className='text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider'>{label}</p>
         <div className='flex items-baseline gap-1'>
-          <h4 className='text-2xl font-black text-slate-800 tracking-tight'>{value}</h4>
-          <span className='text-[10px] font-bold text-slate-400 uppercase'>{subtext}</span>
+          <h4 className='text-xl sm:text-2xl font-black text-slate-800 tracking-tight'>{value}</h4>
+          <span className='text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase'>{subtext}</span>
         </div>
       </div>
     </div>
   )
 
   return (
-    <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
+    <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-8'>
       <StatCard
         label='Today'
         value={todayHours.toFixed(1)}

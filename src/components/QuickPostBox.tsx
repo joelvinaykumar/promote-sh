@@ -96,7 +96,7 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Main Input Area */}
-          <div className='p-4 space-y-4'>
+          <div className='p-3 sm:p-4 space-y-3 sm:space-y-4'>
             <FormField
               control={control}
               name='description'
@@ -111,8 +111,8 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
                       }}
                       placeholder='What did you work on today?'
                       className={cn(
-                        'w-full resize-none text-lg border-none focus-visible:ring-0 shadow-none p-0 transition-all duration-300 placeholder:text-slate-400 placeholder:text-sm bg-transparent! min-h-[40px] font-semibold tracking-tight',
-                        isExpanded ? 'mb-2' : ''
+                        'w-full resize-none text-base sm:text-lg border-none focus-visible:ring-0 shadow-none p-0 transition-all duration-300 placeholder:text-slate-400 placeholder:text-sm bg-transparent! min-h-[40px] font-semibold tracking-tight',
+                        isExpanded ? 'mb-1 sm:mb-2' : ''
                       )}
                       onKeyDown={e => {
                         if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -137,24 +137,24 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
             )}
           >
             <div className='overflow-hidden'>
-              <div className='p-4 border-t border-muted flex flex-wrap gap-6 items-center'>
+              <div className='p-3 sm:p-4 border-t border-muted flex flex-wrap gap-4 sm:gap-6 items-center'>
                 {/* Category Selection */}
                 <FormField
                   control={control}
                   name='category'
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-xs font-medium text-muted-foreground uppercase tracking-wide'>
+                    <FormItem className='w-full sm:w-auto'>
+                      <FormLabel className='text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide'>
                         Category
                       </FormLabel>
                       <FormControl>
-                        <div className='flex flex-wrap gap-2'>
+                        <div className='flex flex-wrap gap-1.5 sm:gap-2'>
                           {CATEGORIES.map(cat => (
                             <Badge
                               key={cat.id}
                               variant={cat.id === field.value ? 'secondary' : 'outline'}
                               onClick={() => field.onChange(cat.id)}
-                              className='cursor-pointer rounded-full px-3 text-xs'
+                              className='cursor-pointer rounded-full px-2.5 sm:px-3 text-[10px] sm:text-xs'
                             >
                               {cat.icon} {cat.label}
                             </Badge>
@@ -170,18 +170,18 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
                   control={control}
                   name='timeSpent'
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-xs font-medium text-muted-foreground uppercase tracking-wide'>
+                    <FormItem className='w-full sm:w-auto'>
+                      <FormLabel className='text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide'>
                         Time Spent
                       </FormLabel>
                       <FormControl>
-                        <div className='flex flex-wrap gap-2'>
+                        <div className='flex flex-wrap gap-1.5 sm:gap-2'>
                           {TIME_PRESETS.map(preset => (
                             <Badge
                               key={preset.minutes}
                               variant={timeSpent === preset.minutes ? 'secondary' : 'outline'}
                               onClick={() => setValue('timeSpent', preset.minutes)}
-                              className='cursor-pointer rounded-full px-3 text-xs'
+                              className='cursor-pointer rounded-full px-2.5 sm:px-3 text-[10px] sm:text-xs'
                             >
                               {preset.label}
                             </Badge>
@@ -196,18 +196,18 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
                   control={control}
                   name='priority'
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-xs font-medium text-muted-foreground uppercase tracking-wide'>
+                    <FormItem className='w-full sm:w-auto'>
+                      <FormLabel className='text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide'>
                         Priority
                       </FormLabel>
                       <FormControl>
-                        <div className='flex flex-wrap gap-2'>
+                        <div className='flex flex-wrap gap-1.5 sm:gap-2'>
                           {PRIORITY_PRESETS.map(priority => (
                             <Badge
                               key={priority.value}
                               variant={priority.value === field.value ? 'secondary' : 'outline'}
                               onClick={() => field.onChange(priority.value)}
-                              className='cursor-pointer rounded-full px-3 text-xs'
+                              className='cursor-pointer rounded-full px-2.5 sm:px-3 text-[10px] sm:text-xs'
                             >
                               {priority.label}
                             </Badge>
@@ -223,13 +223,13 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
                   control={control}
                   name='project_id'
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-xs font-medium text-muted-foreground uppercase tracking-wide'>
+                    <FormItem className='w-full sm:w-auto'>
+                      <FormLabel className='text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide'>
                         Project
                       </FormLabel>
                       <FormControl>
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className='h-8 w-[160px] bg-white border-muted-foreground/20'>
+                          <SelectTrigger className='h-7 sm:h-8 w-full sm:w-[160px] bg-white border-muted-foreground/20'>
                             <SelectValue placeholder='Select Project' />
                           </SelectTrigger>
                           <SelectContent className='bg-white border-muted'>
@@ -250,18 +250,18 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
           </div>
 
           {/* Footer Actions */}
-          <div className='px-4 py-3 bg-slate-50 border-t border-[#d0d7de] rounded-b-lg flex justify-between items-center'>
+          <div className='px-3 sm:px-4 py-3 bg-slate-50 border-t border-[#d0d7de] rounded-b-lg flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-center'>
             <div
               className={cn(
-                'text-xs text-[#57606a] transition-opacity duration-500 delay-100',
+                'text-[10px] sm:text-xs text-[#57606a] transition-opacity duration-500 delay-100 order-2 sm:order-1',
                 isExpanded ? 'opacity-100' : 'opacity-0'
               )}
             >
-              <span>
+              <span className='hidden sm:inline'>
                 Press <kbd className='px-1.5 py-0.5 bg-white border border-border rounded text-xs'>⌘ Enter</kbd> to post
               </span>
             </div>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 w-full sm:w-auto order-1 sm:order-2'>
               <Button
                 type='button'
                 size='sm'
@@ -271,13 +271,13 @@ export function QuickPostBox({ onAddEntry }: QuickPostBoxProps) {
                   setIsExpanded(false)
                 }}
                 className={cn(
-                  'text-sm font-medium text-[#57606a] hover:text-[#24292e] transition-all duration-500',
+                  'text-sm font-medium text-[#57606a] hover:text-[#24292e] transition-all duration-500 flex-1 sm:flex-none',
                   isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none w-0 p-0 overflow-hidden'
                 )}
               >
                 Cancel
               </Button>
-              <Button type='submit' size='sm' loading={isLoading} disabled={!form.formState.isDirty}>
+              <Button type='submit' size='sm' loading={isLoading} disabled={!form.formState.isDirty} className='flex-1 sm:flex-none'>
                 {showSuccess ? (
                   <>
                     <Check className='w-4 h-4' />

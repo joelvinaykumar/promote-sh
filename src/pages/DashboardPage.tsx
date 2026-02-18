@@ -155,8 +155,8 @@ export const DashboardPage: React.FC = () => {
   }, [fetchEntries])
 
   return (
-    <div className='flex-1 overflow-y-auto thin-scrollbar'>
-      <div className='max-w-5xl w-full p-6 space-y-6 mx-auto'>
+    <div className='flex-1 h-full overflow-y-auto thin-scrollbar'>
+      <div className='max-w-5xl w-full p-4 sm:p-6 space-y-4 sm:space-y-6 mx-auto'>
         {/* Contribution Grid */}
         <ContributionGrid />
 

@@ -70,17 +70,17 @@ export function Timeline({ entries, newEntryId, onDelete, onUpdate }: TimelinePr
               <div className='h-px bg-slate-200 flex-1' />
             </div>
           </AccordionTrigger>
-          <AccordionContent className='pt-6'>
-            <div className='relative pl-8 ml-3'>
+          <AccordionContent className='pt-4 sm:pt-6'>
+            <div className='relative pl-6 sm:pl-8 ml-1 sm:ml-3'>
               {/* Vertical Timeline Line */}
               <div className='absolute left-1 top-1 bottom-0 w-[2px] bg-slate-100 rounded-full' />
 
-              <Accordion type='multiple' defaultValue={[group.dates[0]]} className='space-y-6'>
+              <Accordion type='multiple' defaultValue={[group.dates[0]]} className='space-y-4 sm:space-y-6'>
                 {group.dates.map(date => (
                   <AccordionItem key={date} value={date} className='border-none relative'>
                     {/* Timeline Node (Dot) */}
                     <div
-                      className={`absolute -left-[33px] top-1.5 size-3 rounded-full border-2 border-white shadow-sm z-10 ${
+                      className={`absolute -left-[25px] sm:-left-[33px] top-1.5 size-2.5 sm:size-3 rounded-full border-2 border-white shadow-sm z-10 ${
                         isToday(date) ? 'bg-primary ring-4 ring-primary/10 animate-pulse' : 'bg-slate-300'
                       }`}
                     />

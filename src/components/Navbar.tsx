@@ -19,10 +19,10 @@ export function Navbar() {
   return (
     <nav className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between h-14 sm:h-16 items-center">
           {/* Left: Logo and Projects */}
-          <div className="flex items-center gap-8">
-            <h1 className="text-xl font-bold tracking-tight text-emerald-600 cursor-pointer">promote.sh</h1>
+          <div className="flex items-center gap-4 sm:gap-8">
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-emerald-600 cursor-pointer">promote.sh</h1>
           </div>
 
           {/* Right: Avatar and Settings */}

@@ -4,7 +4,7 @@ import { WorkEntry } from './types'
 import { ProfileSidebar } from './components/ProfileSidebar'
 import { AIChatSidebar } from './components/AIChatSidebar'
 import { Navbar } from './components/Navbar'
-import { SidebarProvider } from './components/ui/sidebar'
+import { SidebarInset, SidebarProvider } from './components/ui/sidebar'
 import { UserProvider } from './contexts/UserContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
@@ -15,18 +15,17 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ de
 function Dashboard() {
 
   return (
-    <div className='h-screen bg-background flex w-full overflow-hidden'>
-      <SidebarProvider 
-        className='flex-1 w-auto'
-        style={{ "--sidebar-width": "20rem" } as React.CSSProperties}
-      >
-        <div className='flex flex-col flex-1 overflow-hidden h-full'>
-          <Navbar />
-          <DashboardPage />  
+    <SidebarProvider
+      style={{ "--sidebar-width": "20rem" } as React.CSSProperties}
+    >
+      <SidebarInset className='flex flex-col min-w-0 h-screen overflow-hidden'>
+        <Navbar />
+        <div className='flex-1 overflow-hidden relative'>
+          <DashboardPage />
         </div>
-        <AIChatSidebar />
-      </SidebarProvider>
-    </div>
+      </SidebarInset>
+      <AIChatSidebar />
+    </SidebarProvider>
   )
 }
 
