@@ -1,0 +1,7 @@
+node_modules
+build
+dist
+.agent
+.gemini
+package-lock.json
+bun.lock
