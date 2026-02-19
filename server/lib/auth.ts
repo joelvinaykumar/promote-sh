@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { supabase } from './supabase'
+import { supabase } from './supabase.js'
 
 export const getAuthUser = async (c: Context) => {
   const authHeader = c.req.header('Authorization')

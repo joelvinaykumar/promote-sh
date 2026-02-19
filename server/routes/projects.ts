@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { supabase } from '../lib/supabase'
-import { getAuthUser } from '../lib/auth'
-import { SupabaseTableName } from '../../src/utils/shared-constants'
+import { supabase } from '../lib/supabase.js'
+import { getAuthUser } from '../lib/auth.js'
+import { SupabaseTableName } from '../../src/utils/shared-constants.js'
 
 const projects = new Hono()
 

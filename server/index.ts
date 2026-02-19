@@ -4,10 +4,10 @@ import { cors } from 'hono/cors'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
-import { supabase } from './lib/supabase'
-import projects from './routes/projects'
-import entries from './routes/entries'
-import chat from './routes/chat'
+import { supabase } from './lib/supabase.js'
+import projects from './routes/projects.js'
+import entries from './routes/entries.js'
+import chat from './routes/chat.js'
 
 const app = new Hono().basePath('/api')
 
