@@ -6,3 +6,5 @@ dist
 .DS_Store
 package-lock.json
 bun.lock
+.vercel
+.env*.local

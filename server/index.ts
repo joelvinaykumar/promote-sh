@@ -4,15 +4,32 @@ import { cors } from 'hono/cors'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
-import { supabase } from './lib/supabase.js'
-import projects from './routes/projects.js'
-import entries from './routes/entries.js'
-import chat from './routes/chat.js'
+import { supabase } from './lib/supabase'
+import projects from './routes/projects'
+import entries from './routes/entries'
+import chat from './routes/chat'
 
 const app = new Hono().basePath('/api')
 
+// Global Request Logger (Low level)
+app.use('*', async (c, next) => {
+  console.log(`[Hono] Received ${c.req.method} ${c.req.url}`)
+  await next()
+  console.log(`[Hono] Responded ${c.res.status}`)
+})
+
+app.get('/ping', (c) => {
+  return c.json({ status: 'ok', time: new Date().toISOString() })
+})
+
 app.use('*', logger())
 app.use('*', cors())
+
+// Global Error Handler
+app.onError((err, c) => {
+  console.error('[Hono Error]', err)
+  return c.json({ error: 'Internal Server Error', message: err.message }, 500)
+})
 
 // Auth
 const loginSchema = z.object({

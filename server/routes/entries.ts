@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
-import { supabase } from '../lib/supabase.js'
-import { SupabaseTableName } from '../../src/utils/shared-constants.js'
+import { supabase } from '../lib/supabase'
+import { SupabaseTableName } from '../../src/utils/shared-constants'
 import { zValidator } from '@hono/zod-validator'
 import z from 'zod'
-import { getAuthUser } from '../lib/auth.js'
+import { getAuthUser } from '../lib/auth'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { embed } from 'ai'
 

@@ -4,9 +4,9 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { streamText, generateText, tool, convertToModelMessages, stepCountIs } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 import { z } from 'zod'
-import { supabase } from '../lib/supabase.js'
-import { getAuthUser } from '../lib/auth.js'
-import { GOD_PROMPT, SupabaseTableName } from '../../src/utils/shared-constants.js'
+import { supabase } from '../lib/supabase'
+import { getAuthUser } from '../lib/auth'
+import { GOD_PROMPT, SupabaseTableName } from '../../src/utils/shared-constants'
 
 const chat = new Hono()
 
