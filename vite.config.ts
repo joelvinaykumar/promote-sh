@@ -1,12 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
+import hono from '@hono/vite-build'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(), 
     tailwindcss(),
+    hono({
+      entry: 'api/index.ts', // Your Hono entry point
+      output: 'dist/api/index.ts' 
+    })
   ],
   server: {
     proxy: {
@@ -16,8 +21,11 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true
+  },
   resolve: {
-
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
       'vaul@1.1.2': 'vaul',
