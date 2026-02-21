@@ -9,4 +9,6 @@ if (!supabaseUrl || !supabaseKey) {
   console.error('VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY:', supabaseKey ? 'SET' : 'MISSING')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = (supabaseUrl && supabaseKey) 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null as any

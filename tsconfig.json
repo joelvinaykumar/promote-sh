@@ -60,6 +60,7 @@
       "@jsr/supabase__supabase-js@2.49.8": ["node_modules/@jsr/supabase__supabase-js"]
     }
   },
-  "include": ["src", "server"],
+  "include": ["src", "server", "api"],
+
   "references": [{ "path": "./tsconfig.node.json" }]
 }

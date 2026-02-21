@@ -1,25 +1,23 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
-import devServer from '@hono/vite-dev-server'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(), 
     tailwindcss(),
-    devServer({
-      entry: 'server/index.ts',
-      exclude: [
-        /^\/(?!api).*/, // Only handle /api requests with Hono
-        /^\/src\/.*/,
-        /^\/@vite\/.*/,
-        /^\/@react-refresh$/,
-        /^\/node_modules\/.*/,
-      ]
-    })
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
+
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
       'vaul@1.1.2': 'vaul',
@@ -63,53 +61,5 @@ export default defineConfig({
       '@jsr/supabase__supabase-js@2.49.8': '@jsr/supabase__supabase-js',
       '@': path.resolve(__dirname, './src')
     }
-  },
-  build: {
-    target: 'esnext',
-    outDir: 'build',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': [
-            'lucide-react',
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-context-menu',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-hover-card',
-            '@radix-ui/react-label',
-            '@radix-ui/react-menubar',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-            '@radix-ui/react-tooltip',
-            'vaul',
-            'sonner'
-          ],
-          'vendor-utils': ['date-fns', 'zod', 'react-hook-form', 'nanoid', 'clsx', 'tailwind-merge'],
-          'vendor-ai': ['ai', '@ai-sdk/react', 'react-markdown', 'remark-gfm', 'remark-breaks'],
-          'vendor-supabase': ['@supabase/supabase-js', '@jsr/supabase__supabase-js'],
-          'vendor-charts': ['recharts'],
-        }
-      }
-    }
-  },
-  server: {
-    port: 3000,
-    open: true
   }
 })
